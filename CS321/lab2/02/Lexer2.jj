@@ -1,0 +1,29 @@
+// This is supporting software for CS321/CS322 Compilers and Language Design.
+// Copyright (c) Portland State University.
+//---------------------------------------------------------------------------
+// For CS321 F'15 (J. Li).
+//
+
+// A lexer for operators -- handling common prefix. (JavaCC version)
+//
+// Tokens:
+//   <LTTR:  ['a'-'z']>     
+//   <ADD:   "+">
+//   <SUB:   "-">
+//   <ASSGN: "=">
+//   <EQ:    "==">
+//   <LT:    '<'>
+//   <LE:    "<=">
+//   <RT:    '>'>
+//   <RE:    ">=">
+//   <END:   '\n'>
+//
+PARSER_BEGIN(Lexer2)
+public class Lexer2 {}
+PARSER_END(Lexer2)
+
+// Token Definitions
+//
+SKIP:   { " " | "\t" | "\r" }        	// whitespace chars
+
+// ... add code here ...
