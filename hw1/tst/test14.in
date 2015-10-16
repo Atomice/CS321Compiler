@@ -1,3 +1,0 @@
-// hex literals
-0X7FFFFFFF	// OK
-0x80000000	// too large

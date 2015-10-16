@@ -1,3 +1,0 @@
-// octal literals
-017777777777	// OK
-020000000000    // too large
