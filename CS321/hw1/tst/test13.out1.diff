@@ -1,0 +1,6 @@
+1,2c1,2
+< (3, 1) INTLIT     017777777777
+< Total: 1 tokens
+---
+> (2, 1) INTLIT     017777777777
+> Lexer1$LexError: at (3,1). Invalid octal literal: 020000000000

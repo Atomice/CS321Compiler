@@ -1,0 +1,141 @@
+// This is supporting software for CS321/CS322 Compilers and Language Design.
+// Copyright (c) Portland State University.
+//---------------------------------------------------------------------------
+// For CS321 F'15 (J. Li).
+//
+
+//Jason Hannan
+
+//class LexError extends TokenMgrError{
+//  public LexError(int line, int column, String msg, String image){
+//    super("at (" + line + "," + column + "). " + msg + image);
+//  }
+//}
+
+PARSER_BEGIN(Lexer2)
+public class Lexer2 {}
+class LexicalError extends TokenMgrError{
+  public LexicalError(String msg, int zero){
+    super(msg, zero);
+  }
+}
+PARSER_END(Lexer2)
+
+
+// Token Definitions
+//
+SKIP:   { " " | "\t" | "\r" | "\n" }        	// whitespace chars
+
+//TOKENS THAT DONT GET OUTPUT
+SPECIAL_TOKEN:
+{ < "#" > { 
+  if( matchedToken.image == matchedToken.image ){
+    throw new LexicalError
+    ("at (" + matchedToken.beginLine + "," + matchedToken.beginColumn + "). Illegal character: " + matchedToken.image, 0); 
+  }
+  }
+| < "//" (~["\n","\r"])* ("\n"|"\r"|"\r\n")>
+| < "/*"> : MLC
+}
+
+//MULTI-STATE PARSING FOR MULTI-LINE COMMENTS
+<MLC> SKIP:
+{ < "*/" > : DEFAULT 
+| < ~[] >  
+}
+
+
+TOKEN:  
+{ <STRLIT:  "\"" ((~["\n", "\r", "\""])* "\""
+                 |(~["\n", "\r", "\""])* ) > {
+    if(matchedToken.image.endsWith("\"")){}
+    else{
+      throw new LexicalError("at (" +
+                   matchedToken.beginLine + "," + matchedToken.beginColumn +
+                   "). Ill-formed or unclosed string: " + matchedToken.image , 0);
+    }
+  }
+| <INTLIT: (["0"-"9"])+
+         | "0" ( (["0"-"7"])+
+               | ("x" | "X") (["0"-"9"] | ["a"-"f"] | ["A"-"F"])+)> { 
+                 try { 
+                   if( matchedToken.image.startsWith("0x") ){
+                     Integer.parseInt(matchedToken.image.toLowerCase().substring(2), 16); 
+                   }
+                 }
+                 catch (Exception e) {
+                   throw new LexicalError("at (" +
+                   matchedToken.beginLine + "," + matchedToken.beginColumn + 
+                   "). Invalid hexadecimal literal: " + matchedToken.image , 0);
+                 }
+                 try{
+                   if( matchedToken.image.startsWith("0") && !matchedToken.image.startsWith("0x") && !matchedToken.image.startsWith("0X")){
+                     Integer.parseInt(matchedToken.image, 8);
+                   }
+                 }
+                 catch (Exception e) {
+                   throw new LexicalError("at (" +
+                   matchedToken.beginLine + "," + matchedToken.beginColumn + 
+                   "). Invalid octal literal: " + matchedToken.image , 0);
+                 }
+                 try{
+                   if( !matchedToken.image.startsWith("0")){
+                     Integer.parseInt(matchedToken.image, 10);
+                   }  
+                 }
+                 catch (Exception e) {
+                   throw new LexicalError("at (" +
+                   matchedToken.beginLine + "," + matchedToken.beginColumn + 
+                   "). Invalid decimal literal: " + matchedToken.image , 0);
+                 }
+               }
+| <DBLLIT: ( (["0"-"9"])+ "." (["0"-"9"])*
+           | (["0"-"9"])* "." (["0"-"9"])+ ) >
+| < "class" >
+| < "extends" >
+| < "static" >
+| < "public" >
+| < "main" >
+| < "void" >
+| < "boolean" >
+| < "int" >
+| < "double" >
+| < "String" >
+| < "true" >
+| < "false" >
+| < "new" >
+| < "this" >
+| < "if" >
+| < "else" >
+| < "while" >
+| < "return" >
+| < "System" >
+| < "out" >
+| < "println" >
+| < "+" >
+| < "-" >
+| < "*" >
+| < "/" >
+| < "&&" >
+| < "!" >
+| < "==" >
+| < "!=" >
+| < "<" >
+| < "<=" >
+| < ">" >
+| < ">=" >
+| < "=" >
+| < ";" >
+| < "," >
+| < "." >
+| < "(" >
+| < ")" >
+| < "[" >
+| < "]" >
+| < "{" >
+| < "}" >
+| <ID: (["a"-"z"] | ["A"-"Z"]) (["a"-"z"] | ["A"-"Z"] | ["0"-"9"])* >
+}
+
+
+

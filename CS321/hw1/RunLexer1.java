@@ -35,6 +35,6 @@ public class RunLexer1 {
       System.out.print("Total: " + tknCnt + " tokens\n");
     } catch (Exception e) {
       System.err.println(e);
-    }
+      }
   } 
 }
